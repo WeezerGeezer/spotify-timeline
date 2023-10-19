@@ -1,0 +1,4 @@
+[build]
+  publish = "/static/"
+  command = "python app.py"
+  functions = "netlify/functions"
