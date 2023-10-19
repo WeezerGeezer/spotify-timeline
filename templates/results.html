@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results - Artist Frequency in Playlists</title>
+</head>
+<body>
+    <h1>Results - Artist Frequency in Playlists</h1>
+
+    {% for playlist_name, artist_frequency in artist_frequencies.items() %}
+    <h2>{{ playlist_name }}</h2>
+    <ul>
+        {% for artist, count in artist_frequency.items() %}
+        <li>{{ artist }}: {{ count }}</li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+</body>
+</html>

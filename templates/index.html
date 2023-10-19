@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spotify Playlist Links</title>
+</head>
+<body>
+    <h1>Login with Spotify</h1>
+    <a href="{{ url_for('login') }}">Login with Spotify</a>
+
+    <h2>Playlist Links</h2>
+    <form method="post" action="/process_playlists">
+        <div id="playlist-inputs">
+            <input type="text" name="playlist_link[]" placeholder="Enter Playlist Link"><br>
+            <input type="text" name="playlist_link[]" placeholder="Enter Playlist Link"><br>
+        </div>
+        <button type="button" onclick="addPlaylistInput()">Add Playlist</button><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        function addPlaylistInput() {
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'playlist_link[]';
+            input.placeholder = 'Enter Playlist Link';
+            document.getElementById('playlist-inputs').appendChild(input);
+            document.getElementById('playlist-inputs').appendChild(document.createElement('br'));
+        }
+    </script>
+</body>
+</html>
