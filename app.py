@@ -1,4 +1,5 @@
 import re
+import os
 from collections import Counter
 from datetime import datetime
 
@@ -55,5 +56,5 @@ def process_playlists():
     return render_template('results.html', artist_frequencies=artist_frequencies)
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000), debug=False))
