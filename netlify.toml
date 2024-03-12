@@ -1,4 +1,4 @@
 [build]
   publish = "/static/"
-  command = "gunicorn -b 0.0.0.0:$PORT app:app"
+  command = "gunicorn -b 0.0.0.0 app:app"
   functions = "netlify/functions"
