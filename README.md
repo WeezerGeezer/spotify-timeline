@@ -7,7 +7,8 @@ An interactive web application that visualizes how music listening habits evolve
 
 ## Features
 
-- **Interactive Sankey Diagrams**: Visualize track continuity across multiple years
+- **Real Spotify Data**: Fetch and analyze your actual Spotify playlists
+- **Interactive Sankey Diagrams**: Visualize track continuity across multiple playlists
 - **Multiple Color Modes**:
   - 🎵 **Genre**: Color by music genre
   - 🎤 **Artist**: Each artist gets a unique color
@@ -15,7 +16,9 @@ An interactive web application that visualizes how music listening habits evolve
   - 📅 **Release Year**: Gradient from old (blue) to new (red)
 - **Interactive Tooltips**: Hover over tracks to see detailed information
 - **Track Highlighting**: Click tracks to highlight their flow across years
+- **Playlist URL Input**: Easy form to add multiple playlist URLs
 - **Responsive Design**: Works on desktop, tablet, and mobile
+- **Placeholder Mode**: Demo data available without API setup
 
 ## Tech Stack
 
@@ -27,8 +30,9 @@ An interactive web application that visualizes how music listening habits evolve
 
 ### Backend
 - **Flask** (Python) API
-- **Spotipy** for Spotify API integration (future)
+- **Spotipy** for Spotify API integration
 - **Flask-CORS** for cross-origin requests
+- **python-dotenv** for environment configuration
 
 ## Getting Started
 
@@ -36,6 +40,7 @@ An interactive web application that visualizes how music listening habits evolve
 - Node.js 18+ and npm
 - Python 3.9+
 - Git
+- Spotify Developer Account (optional - for real data)
 
 ### Installation
 
@@ -64,6 +69,19 @@ An interactive web application that visualizes how music listening habits evolve
    # Install dependencies
    pip install -r requirements.txt
    ```
+
+4. **Set up Spotify API (Optional - for real data)**
+   ```bash
+   # Copy environment template
+   cp .env.example .env
+
+   # Edit .env and add your Spotify credentials
+   # Get credentials at: https://developer.spotify.com/dashboard
+   ```
+
+   See **[SPOTIFY_SETUP.md](./SPOTIFY_SETUP.md)** for detailed instructions.
+
+   **Without API setup**: The app works with placeholder data for demo purposes.
 
 ### Running the Application
 
@@ -94,16 +112,44 @@ cd backend && python app.py
 ```
 Visit http://localhost:5000
 
-### Current Status
+### Using Real Spotify Data
 
-Currently using **placeholder data** for demonstration. The app shows 3 years of sample playlists (2022-2024) with realistic tracks that demonstrate the visualization capabilities.
+With Spotify API configured:
+1. Open the app at http://localhost:5173
+2. Paste Spotify playlist URLs in the input form
+3. Click "Analyze Playlists"
+4. View your real data visualization!
 
-**Next Steps:**
-- Integrate Spotify OAuth authentication
-- Add Apple Music support
-- Implement real playlist fetching
-- Add search/filter functionality
-- Export visualizations
+**Getting Playlist URLs:**
+- Open Spotify (app or web)
+- Go to any playlist
+- Click (...) → Share → Copy link to playlist
+- Paste in the app
+
+**Example public playlists to try:**
+- Today's Top Hits
+- Global Top 50
+- Your year-end wrapped playlists
+
+See **[SPOTIFY_SETUP.md](./SPOTIFY_SETUP.md)** for complete setup guide.
+
+### Current Features
+
+✅ **Implemented:**
+- Real Spotify data fetching via API
+- Playlist URL input form with validation
+- Four color modes (genre, artist, album, release year)
+- Interactive Sankey visualization
+- Track tooltips and highlighting
+- Error handling and loading states
+- Placeholder mode for demo
+
+🔜 **Coming Soon:**
+- OAuth for private playlists
+- Apple Music support
+- Search/filter functionality
+- Export visualizations (PNG/SVG)
+- Analytics dashboard
 
 ## Project Structure
 
