@@ -29,6 +29,7 @@ export interface PlaylistData {
   year?: number;
   total_tracks: number;
   tracks: Track[];
+  platform?: 'spotify' | 'apple';
 }
 
 export interface SankeyNode {

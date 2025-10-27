@@ -15,6 +15,7 @@ interface SankeyDiagramProps {
   onNodeClick?: (track: Track) => void;
   highlightedTrackId?: string | null;
   playlistNames?: string[];
+  playlistPlatforms?: ('spotify' | 'apple' | undefined)[];
 }
 
 export const SankeyDiagram: React.FC<SankeyDiagramProps> = ({
@@ -25,6 +26,7 @@ export const SankeyDiagram: React.FC<SankeyDiagramProps> = ({
   onNodeClick,
   highlightedTrackId,
   playlistNames = [],
+  playlistPlatforms = [],
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -155,7 +157,7 @@ export const SankeyDiagram: React.FC<SankeyDiagramProps> = ({
         }
       });
 
-    // Add playlist labels at the top
+    // Add playlist labels at the top with platform icons
     const playlistGroups = Array.from(new Set(graph.nodes.map((n: any) => n.playlist)));
 
     playlistGroups.forEach((playlistIndex) => {
@@ -164,6 +166,9 @@ export const SankeyDiagram: React.FC<SankeyDiagramProps> = ({
 
       const firstNode = nodesInPlaylist[0] as any;
       const x = (firstNode.x0 + firstNode.x1) / 2;
+      const platform = playlistPlatforms[playlistIndex];
+      const platformIcon = platform === 'spotify' ? '🟢' : platform === 'apple' ? '🍎' : '';
+      const playlistName = playlistNames[playlistIndex] || `Playlist ${playlistIndex + 1}`;
 
       g.append('text')
         .attr('x', x)
@@ -172,7 +177,7 @@ export const SankeyDiagram: React.FC<SankeyDiagramProps> = ({
         .attr('font-size', '14px')
         .attr('font-weight', 'bold')
         .attr('fill', '#333')
-        .text(playlistNames[playlistIndex] || `Playlist ${playlistIndex + 1}`);
+        .text(`${platformIcon} ${playlistName}`);
     });
 
     // Add track count for each playlist
@@ -191,7 +196,7 @@ export const SankeyDiagram: React.FC<SankeyDiagramProps> = ({
         .attr('fill', '#666')
         .text(`${nodesInPlaylist.length} tracks`);
     });
-  }, [data, dimensions, highlightedTrackId, onNodeHover, onNodeClick, playlistNames]);
+  }, [data, dimensions, highlightedTrackId, onNodeHover, onNodeClick, playlistNames, playlistPlatforms]);
 
   if (data.nodes.length === 0) {
     return (

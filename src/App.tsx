@@ -16,7 +16,7 @@ function App() {
   const [currentPlaylists, setCurrentPlaylists] = useState<PlaylistData[]>(placeholderPlaylists);
   const [usingPlaceholder, setUsingPlaceholder] = useState(true);
 
-  const { isLoading, error, warnings, fetchPlaylistData } = useFetchPlaylists();
+  const { isLoading, error, warnings, platform, fetchPlaylistData } = useFetchPlaylists();
 
   // Transform data whenever color mode or playlists change
   const sankeyData = useMemo(() => {
@@ -26,8 +26,9 @@ function App() {
     });
   }, [currentPlaylists, colorMode]);
 
-  // Get playlist names for labels
+  // Get playlist names and platforms for labels
   const playlistNames = currentPlaylists.map((p) => p.name);
+  const playlistPlatforms = currentPlaylists.map((p) => p.platform);
 
   const handleNodeHover = (track: Track | null, position?: { x: number; y: number }) => {
     setHoveredTrack(track);
@@ -66,6 +67,10 @@ function App() {
   const totalTracks = currentPlaylists.reduce((sum, p) => sum + p.total_tracks, 0);
   const uniqueTracks = new Set(currentPlaylists.flatMap((p) => p.tracks.map((t) => t.id))).size;
   const recurringTracks = sankeyData.links.length;
+
+  // Calculate platform breakdown
+  const spotifyPlaylists = currentPlaylists.filter(p => p.platform === 'spotify').length;
+  const applePlaylists = currentPlaylists.filter(p => p.platform === 'apple').length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -116,7 +121,7 @@ function App() {
         {isLoading && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-8 mb-6 text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-            <p className="text-blue-900 font-medium">Fetching playlists from Spotify...</p>
+            <p className="text-blue-900 font-medium">Fetching playlists...</p>
             <p className="text-sm text-blue-700 mt-2">This may take a few seconds</p>
           </div>
         )}
@@ -124,7 +129,7 @@ function App() {
         {/* Stats Bar */}
         {!isLoading && currentPlaylists.length > 0 && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className={`grid grid-cols-1 ${platform === 'mixed' ? 'md:grid-cols-4' : 'md:grid-cols-3'} gap-4 mb-6`}>
               <div className="bg-white rounded-lg shadow p-4">
                 <div className="text-sm text-gray-600">Total Tracks</div>
                 <div className="text-2xl font-bold text-gray-900">{totalTracks}</div>
@@ -140,19 +145,37 @@ function App() {
                   Appeared in multiple playlists
                 </div>
               </div>
+              {platform === 'mixed' && (
+                <div className="bg-white rounded-lg shadow p-4">
+                  <div className="text-sm text-gray-600">Platform Mix</div>
+                  <div className="text-sm font-semibold text-gray-900 mt-1">
+                    {spotifyPlaylists > 0 && <div>🟢 {spotifyPlaylists} Spotify</div>}
+                    {applePlaylists > 0 && <div>🍎 {applePlaylists} Apple Music</div>}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Data Source Indicator */}
             <div className="flex items-center justify-between mb-4">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-600 flex gap-2">
                 {usingPlaceholder ? (
                   <span className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-700">
                     📊 Using placeholder data
                   </span>
                 ) : (
-                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700">
-                    ✓ Using real Spotify data
-                  </span>
+                  <>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700">
+                      ✓ Using real data
+                    </span>
+                    {platform && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-700">
+                        {platform === 'spotify' && '🟢 Spotify'}
+                        {platform === 'apple' && '🍎 Apple Music'}
+                        {platform === 'mixed' && '🎵 Spotify + Apple Music'}
+                      </span>
+                    )}
+                  </>
                 )}
               </div>
               {!usingPlaceholder && (
@@ -187,6 +210,7 @@ function App() {
                 onNodeClick={handleNodeClick}
                 highlightedTrackId={highlightedTrackId}
                 playlistNames={playlistNames}
+                playlistPlatforms={playlistPlatforms}
               />
             </div>
           </>
@@ -199,11 +223,11 @@ function App() {
               <>
                 Using placeholder data for demonstration.
                 <br />
-                Add your Spotify playlist URLs above to analyze your own music!
+                Add your Spotify or Apple Music playlist URLs above to analyze your own music!
               </>
             ) : (
               <>
-                Analyzing your Spotify playlists.
+                Analyzing your {platform === 'spotify' ? 'Spotify' : platform === 'apple' ? 'Apple Music' : 'music'} playlists.
                 <br />
                 Data is fetched in real-time and not stored.
               </>

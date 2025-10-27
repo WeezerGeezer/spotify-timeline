@@ -7,6 +7,7 @@ export interface FetchPlaylistsResponse {
   playlists: PlaylistData[];
   errors: string[];
   status: string;
+  platform?: 'spotify' | 'apple' | 'mixed';
 }
 
 export interface FetchPlaylistsError {
